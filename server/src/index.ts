@@ -1,29 +1,28 @@
-import express, { Request, Response } from 'express';
+import express  from 'express';
 import mongoose from 'mongoose';
-import Deck from './models/Deck';
-import config from "dotenv"
+require("dotenv").config()
+import cors from "cors";
+import router from "./routes/subjects"
 
 require("dotenv")
 
 const app = express();
 
 app.use(express.json())
+app.use(cors({
+   origin: "*"
+}))
 
 const PORT = 5001
 
-app.post("/deck", async (req: Request, res: Response) => {
-   const {title} = req.body
-   const newDeck = new Deck({
-      title: title
-   })
-  const createdDeck = await newDeck.save()
-   res.json(createdDeck)
-})
+app.use('/subjects', router)
 
-// qLkTx6dpc5yvbT6g
-
-mongoose.connect(process.env.MONGO_URL!).then(() => {
-   console.log(`listening on ${PORT}`);
-   app.listen(5001)
-})
+mongoose
+  .connect(
+    "mongodb+srv://Kim:qLkTx6dpc5yvbT6g@flash-cards.dibh8s2.mongodb.net/?retryWrites=true&w=majority&appName=flash-cards"
+  )
+  .then(() => {
+    console.log(`listening on ${PORT}`);
+    app.listen(5001);
+  });
 
